@@ -29,7 +29,7 @@ public class MeasurementTool : MonoBehaviour
                 endPoint = leftHand.position;
                 isMeasuring = false;
                 lineRenderer.SetPosition(1, endPoint);
-
+                
                 float distance = Vector3.Distance(startPoint, endPoint);
                 Debug.Log("Distance: " + distance + " meters");
             }
