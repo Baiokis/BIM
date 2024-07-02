@@ -17,20 +17,24 @@ public class DistanceMeasurement : MonoBehaviour
 
     void Update()
     {
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger)) // Para controladores Oculus, pode ajustar conforme seu SDK
+        // Verificar se o gatilho do joystick direito foi pressionado
+        if (OVRInput.GetDown(OVRInput.Button.SecondaryIndexTrigger))
         {
             if (pointA == null)
             {
+                // Obter a posição do controlador direito e instanciar o ponto A
                 pointA = Instantiate(pointPrefab, OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch), Quaternion.identity);
             }
             else if (pointB == null)
             {
+                // Obter a posição do controlador direito e instanciar o ponto B
                 pointB = Instantiate(pointPrefab, OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch), Quaternion.identity);
                 DrawLine();
                 MeasureDistance();
             }
             else
             {
+                // Destruir os pontos antigos e reiniciar o processo
                 Destroy(pointA);
                 Destroy(pointB);
                 pointA = Instantiate(pointPrefab, OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch), Quaternion.identity);
