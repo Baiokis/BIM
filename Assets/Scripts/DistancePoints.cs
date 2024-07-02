@@ -1,76 +1,53 @@
 using UnityEngine;
-using UnityEngine.XR;
-using UnityEngine.XR.Interaction.Toolkit;
 
-public class PointSelector : MonoBehaviour
+public class DistanceMeasurement : MonoBehaviour
 {
-    private Vector3? pointA = null;
-    private Vector3? pointB = null;
+    public GameObject pointPrefab; // Prefab para o ponto
+    private GameObject pointA;
+    private GameObject pointB;
     private LineRenderer lineRenderer;
 
     void Start()
     {
         lineRenderer = gameObject.AddComponent<LineRenderer>();
-        lineRenderer.startWidth = 0.1f;
-        lineRenderer.endWidth = 0.1f;
         lineRenderer.positionCount = 2;
-        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-        lineRenderer.startColor = Color.red;
-        lineRenderer.endColor = Color.red;
+        lineRenderer.startWidth = 0.05f;
+        lineRenderer.endWidth = 0.05f;
     }
 
     void Update()
     {
-        if (IsRightTriggerPressed())
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger)) // Para controladores Oculus, pode ajustar conforme seu SDK
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
+            if (pointA == null)
             {
-                if (pointA == null)
-                {
-                    pointA = hit.point;
-                    Debug.Log($"Point A selected at: {pointA}");
-                    lineRenderer.SetPosition(0, pointA.Value);
-                    lineRenderer.SetPosition(1, pointA.Value); // Inicialmente, a linha começa e termina no ponto A
-                }
-                else if (pointB == null)
-                {
-                    pointB = hit.point;
-                    Debug.Log($"Point B selected at: {pointB}");
-                    lineRenderer.SetPosition(1, pointB.Value);
-                    float distance = CalculateDistance(pointA.Value, pointB.Value);
-                    Debug.Log($"Distance between Point A and Point B: {distance} meters");
-                    pointA = null;
-                    pointB = null;
-                }
+                pointA = Instantiate(pointPrefab, OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch), Quaternion.identity);
             }
-        }
-
-        // Atualiza a linha e a distância enquanto o ponto B não é selecionado
-        if (pointA.HasValue && !pointB.HasValue)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
+            else if (pointB == null)
             {
-                lineRenderer.SetPosition(1, hit.point);
-                float distance = CalculateDistance(pointA.Value, hit.point);
-                Debug.Log($"Current distance: {distance} meters");
+                pointB = Instantiate(pointPrefab, OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch), Quaternion.identity);
+                DrawLine();
+                MeasureDistance();
+            }
+            else
+            {
+                Destroy(pointA);
+                Destroy(pointB);
+                pointA = Instantiate(pointPrefab, OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch), Quaternion.identity);
+                pointB = null;
             }
         }
     }
 
-    bool IsRightTriggerPressed()
+    void DrawLine()
     {
-        bool triggerValue;
-        InputDevice rightHand = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
-        rightHand.TryGetFeatureValue(CommonUsages.triggerButton, out triggerValue);
-        return triggerValue;
+        lineRenderer.SetPosition(0, pointA.transform.position);
+        lineRenderer.SetPosition(1, pointB.transform.position);
     }
 
-    float CalculateDistance(Vector3 point1, Vector3 point2)
+    void MeasureDistance()
     {
-        return Vector3.Distance(point1, point2);
+        float distance = Vector3.Distance(pointA.transform.position, pointB.transform.position);
+        Debug.Log("DistÃ¢ncia: " + distance);
     }
 }
