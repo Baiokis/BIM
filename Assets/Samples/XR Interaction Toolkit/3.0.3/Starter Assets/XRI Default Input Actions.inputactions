@@ -1001,7 +1001,7 @@
                 {
                     "name": "",
                     "id": "adabcfcc-ee1d-4568-9e1d-cb9da65fb767",
-                    "path": "<XRController>{LeftHand}/menuButton",
+                    "path": "<XRController>{LeftHand}/triggerPressed",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
