@@ -1,0 +1,13 @@
+{
+  "name": "com.cgpal.ezdim",
+  "version": "1.1.0",
+  "displayName": "Easy Dimension - Measurement System",
+  "description": "Our unity plugin is a comprehensive solution for creating dimensions in your projects. With compatibility for mobile devices, AR and VR, you can easily bring dimensioning to any environment. The plugin supports dynamic transforms, meaning changes to your objects in real-time will be accurately reflected in the dimensions. A variety of units including custom units, and full control over materials, color, and text parameters, make it easy to customize the appearance of your dimensions. Our selection system and highlight feature, along with trigger events for hover and selection, makes it easy to interact with your dimensions. Lastly, our offset options ensure that your dimensions are always visible and clearly legible, no matter the background.",
+  "unity": "2022.2",
+  "samples": {
+    "VR Sample": {
+      "description": "This sample tested on Xr Interaction Toolkit 2.2. Do not forget to download xr interaction toolkit sample files from package manager before downloading this sample!",
+      "url": "https://github.com/isa3d/EzDim_Samples/files/11524455/VR_Sample.zip"
+    }
+  }
+}
