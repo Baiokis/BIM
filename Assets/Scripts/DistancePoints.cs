@@ -22,12 +22,10 @@ public class DistanceMeasurement : MonoBehaviour
         {
             if (pointA == null)
             {
-                // Obter a posição do controlador direito e instanciar o ponto A
                 pointA = Instantiate(pointPrefab, OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch), Quaternion.identity);
             }
             else if (pointB == null)
             {
-                // Obter a posição do controlador direito e instanciar o ponto B
                 pointB = Instantiate(pointPrefab, OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch), Quaternion.identity);
                 DrawLine();
                 MeasureDistance();
