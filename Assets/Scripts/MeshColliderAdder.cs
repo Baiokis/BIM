@@ -2,37 +2,44 @@ using UnityEngine;
 
 public class MeshColliderAdder : MonoBehaviour
 {
-    void Start()
+    // Método público para adicionar MeshColliders a todos os objetos na cena
+    public void AddMeshColliders()
     {
-    }
-    void Update()
-    {
-        AddMeshColliderToHierarchy(transform);
-    }
-
-    void AddMeshColliderToHierarchy(Transform parent)
-    {
-        // Tenta adicionar um MeshCollider ao GameObject atual
-        if (parent.gameObject.GetComponent<MeshFilter>() != null)
+        foreach (MeshFilter meshFilter in FindObjectsOfType<MeshFilter>())
         {
-            if (parent.gameObject.GetComponent<MeshCollider>() == null)
+            GameObject obj = meshFilter.gameObject;
+            if (obj.GetComponent<MeshCollider>() == null)
             {
-                parent.gameObject.AddComponent<MeshCollider>();
-                Debug.Log($"MeshCollider adicionado com sucesso ao GameObject: {parent.name}");
+                obj.AddComponent<MeshCollider>();
+                Debug.Log($"MeshCollider adicionado com sucesso ao GameObject: {obj.name}");
             }
             else
             {
-                Debug.Log($"MeshCollider já existe no GameObject: {parent.name}");
+                Debug.Log($"MeshCollider já existe no GameObject: {obj.name}");
             }
+        }
+    }
+
+    // Método público para remover MeshColliders de todos os objetos na cena
+    public void RemoveMeshColliders()
+    {
+        foreach (MeshCollider meshCollider in FindObjectsOfType<MeshCollider>())
+        {
+            Destroy(meshCollider);
+            Debug.Log($"MeshCollider removido do GameObject: {meshCollider.gameObject.name}");
+        }
+    }
+
+    // Método para ser chamado pelo Toggle
+    public void ToggleMeshColliders(bool state)
+    {
+        if (state)
+        {
+            AddMeshColliders();
         }
         else
         {
-            Debug.Log($"MeshFilter não encontrado no GameObject: {parent.name}. MeshCollider não adicionado.");
-        }
-
-        for (int i = 0; i < parent.childCount; i++)
-        {
-            AddMeshColliderToHierarchy(parent.GetChild(i));
+            RemoveMeshColliders();
         }
     }
 }
