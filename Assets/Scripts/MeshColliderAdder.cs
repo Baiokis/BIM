@@ -4,6 +4,9 @@ public class MeshColliderAdder : MonoBehaviour
 {
     void Start()
     {
+    }
+    void Update()
+    {
         AddMeshColliderToHierarchy(transform);
     }
 
