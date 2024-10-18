@@ -2740,6 +2740,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1025796690}
   m_CullTransparentMesh: 1
+--- !u!1 &1072765956
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1072765958}
+  - component: {fileID: 1072765959}
+  m_Layer: 0
+  m_Name: Importer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1072765958
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072765956}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1072765959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072765956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25251b7ac0df4c048a0c2a0a46d6e942, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1143357916
 GameObject:
   m_ObjectHideFlags: 0
@@ -3028,81 +3072,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2052fe2107d3f1840a33dc08c476f641, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawInVrComp: {fileID: 1295080731}
-  unit: 2
-  customUnitMultiplier: 1
-  customUnitName: cu
-  showUnitAfterNumber: 1
-  numberOfDecimal: 2
-  cameraTransform: {fileID: 0}
-  rendererCamera: {fileID: 0}
-  mainLineMaterial: {fileID: 2100000, guid: 515c92e4606df8241a60eb64141ff1fe, type: 2}
-  secondaryLinesMaterial: {fileID: 2100000, guid: d326466fa754dbb478b599a1fb9a419b, type: 2}
-  arrowMaterial: {fileID: 2100000, guid: 668a60e2394f09a4d99d4f78e6c880cd, type: 2}
-  arcMaterial: {fileID: 2100000, guid: fc1393867398518498352b5299ade615, type: 2}
-  areaSurfaceMaterial: {fileID: 2100000, guid: 25ffe9335dd40644eb8283cb2a0775c6, type: 2}
-  areaBorderMaterial: {fileID: 2100000, guid: f2529ae126a10eb4fbcbfe9e09ff859c, type: 2}
-  arrowPrefab: {fileID: 919132149155446097, guid: 1c445ac1fe2f69a4280bb360c326071f, type: 3}
-  areaHandlesPrefab: {fileID: 7370864028265943570, guid: d40977b05972d6f4db3427d228445693, type: 3}
-  alignedDimFreeModeDirPointer: {fileID: 8324714207004671384, guid: db07bcc303c966a4690972a96f471578, type: 3}
-  alignedDimFreeModePlanePrefab: {fileID: 1413740496889781740, guid: 1854ad8ef21f0224fa332aee7f263799, type: 3}
-  planePrefabScaleMultiplier: 0
-  areaHandlesScale: 1
-  pointerScale: 1
-  isDynamic: 1
-  linesThickness: 0.02
-  textSize: 1
-  textOffset: 1.5
-  arrowHeight: 6
-  hitNormalOffset: 0.01
-  textTowardsCameraOffset: 0.001
-  measurementDirection: 0
-  offsetDirection: 1
-  measurementPlane: 0
-  reverseDirection: 0
-  offsetDistance: 0.5
-  secondaryLinesThickness: 0.05
-  secondaryLinesExtend: 0.15
-  autoTextPosition: 1
-  flipTextPosition: 0
-  angleMeasurmentPlane: 0
-  arcScale: 1
-  angleDimTextOffsetFromCenter: 1
-  angleDimHitNormalOffset: 0.02
-  textOffsetWhenNotFit: {x: 0.03, y: 0.05}
-  areaMeasurementPlane: 0
-  enableAreaBorderLine: 1
-  areaLocalYOffset: 0.01
-  areaTextLocalYOffset: 0.02
-  areaBorderLocalYOffset: 0.02
-  areaBorderLineThickness: 0.01
-  areaNumberPositionOffset: {x: 0, y: 0}
-  numberColor: {r: 0, g: 0, b: 0, a: 1}
-  mainColor: {r: 0, g: 0, b: 0, a: 1}
-  secondaryColor: {r: 0, g: 0, b: 0, a: 1}
-  arrowColor: {r: 0, g: 0, b: 0, a: 1}
-  arcColor: {r: 0, g: 0, b: 0, a: 1}
-  areaBorderColor: {r: 0, g: 0, b: 0, a: 1}
-  areaSurfaceColor: {r: 0.6, g: 0.3, b: 0, a: 1}
-  hoveredTint: {r: 0, g: 0.3, b: 0.5, a: 1}
-  selectedTint: {r: 0, g: 0.7, b: 1, a: 1}
-  hoveredOnSelectedTint: {r: 0.5, g: 0.8, b: 1, a: 1}
-  onSelectionChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  onHovered:
-    m_PersistentCalls:
-      m_Calls: []
-  pointA: {x: 0, y: 0, z: 0}
-  pointB: {x: 0, y: 0, z: 0}
-  isCreating: 0
-  DimensionsList: []
-  SelectionList: []
-  oldHoveredGo: {fileID: 0}
-  isOldSelectionListEmpty: 0
-  stepA: 0
-  planePrefab: {fileID: 0}
-  directionPointer: {fileID: 0}
 --- !u!4 &1295080730
 Transform:
   m_ObjectHideFlags: 0
@@ -3130,10 +3099,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1228ce5acd85ca849937feada440e4b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rayInteractor: {fileID: 0}
-  primaryButtonPress:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &1310977326
 GameObject:
   m_ObjectHideFlags: 0
@@ -3950,7 +3915,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 061b3b72c44be5c42abaa4d806a840ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textMeshPro: {fileID: 609099386}
 --- !u!1 &1544629203
 GameObject:
   m_ObjectHideFlags: 0
@@ -6489,3 +6453,4 @@ SceneRoots:
   - {fileID: 545182962}
   - {fileID: 1544629205}
   - {fileID: 1652805262}
+  - {fileID: 1072765958}
