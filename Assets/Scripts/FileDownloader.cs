@@ -7,9 +7,16 @@ using UnityEngine.SceneManagement;
 
 public class FileDownloader : MonoBehaviour
 {
-    private string uploadUrl = "http://172.27.90.203:8080/upload";  // URL para upload ou onde pega o nome
+    private string fileNameUrl = "http://172.27.90.203:8080/get-latest-file";  // URL para obter o nome do arquivo mais recente
     private string baseUrl = "http://172.27.90.203:8080/uploads/";  // URL base para o download
     public string fileName;  // Variável para o nome do arquivo (inicialmente vazia)
+
+
+    [System.Serializable]
+    public class FileResponse
+    {
+        public string filename;
+    }
 
     void Start()
     {
@@ -18,9 +25,8 @@ public class FileDownloader : MonoBehaviour
 
     IEnumerator GetFileNameAndDownload()
     {
-        // Faz uma requisição para obter o nome do arquivo
-        UnityWebRequest request = UnityWebRequest.Get(uploadUrl);  // Supondo que o nome é obtido de um GET
-
+        // Faz uma requisição GET para obter o nome do arquivo
+        UnityWebRequest request = UnityWebRequest.Get(fileNameUrl);
         yield return request.SendWebRequest();
 
         if (request.result != UnityWebRequest.Result.Success)
@@ -29,14 +35,16 @@ public class FileDownloader : MonoBehaviour
             yield break;
         }
 
-        // Supondo que o nome do arquivo está retornado em um campo "filename" no JSON
+        // Usa JsonUtility para parsear a resposta JSON
         string jsonResponse = request.downloadHandler.text;
-        SimpleJSON.JSONNode jsonResponseParsed = SimpleJSON.JSON.Parse(jsonResponse);
-        fileName = jsonResponseParsed["filename"];
-        Debug.Log("Nome do arquivo obtido: " + fileName);
+        FileResponse fileResponse = JsonUtility.FromJson<FileResponse>(jsonResponse);
 
-        if (!string.IsNullOrEmpty(fileName))
+        if (fileResponse != null && !string.IsNullOrEmpty(fileResponse.filename))
         {
+            fileName = fileResponse.filename;
+            Debug.Log("Nome do arquivo obtido: " + fileName);
+
+            // Inicia o download do modelo
             StartCoroutine(DownloadAndLoadModel(fileName));
         }
         else
