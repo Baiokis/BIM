@@ -7,157 +7,79 @@ using UnityEngine.SceneManagement;
 
 public class FileDownloader : MonoBehaviour
 {
-    [SerializeField]
-    private string fileListUrl = "http://172.27.90.203:8080/uploads/list";
-
-    [SerializeField]
-    private string sceneName = "AUTVIX";
-
-    [SerializeField]
-    private Vector3 modelPosition = Vector3.zero;
+    private string uploadUrl = "http://172.27.90.203:8080/upload";  // URL para upload ou onde pega o nome
+    private string baseUrl = "http://172.27.90.203:8080/uploads/";  // URL base para o download
+    public string fileName;  // Variável para o nome do arquivo (inicialmente vazia)
 
     void Start()
     {
-        StartCoroutine(GetAvailableFileAndDownload());
+        StartCoroutine(GetFileNameAndDownload());
     }
 
-    // Obt�m a lista de arquivos e baixa o primeiro arquivo dispon�vel
-    IEnumerator GetAvailableFileAndDownload()
+    IEnumerator GetFileNameAndDownload()
     {
-        string availableFileUrl = null;
+        // Faz uma requisição para obter o nome do arquivo
+        UnityWebRequest request = UnityWebRequest.Get(uploadUrl);  // Supondo que o nome é obtido de um GET
 
-        using (UnityWebRequest www = UnityWebRequest.Get(fileListUrl))
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
         {
-            yield return www.SendWebRequest();
-
-            if (www.result != UnityWebRequest.Result.Success)
-            {
-                Debug.LogError($"Erro ao obter a lista de arquivos: {www.error}");
-                yield break;
-            }
-
-            string fileList = www.downloadHandler.text;
-            string[] files = fileList.Split(',');
-
-            if (files.Length > 0)
-            {
-                availableFileUrl = "http://172.27.90.203:8080/uploads/" + files[0].Trim();
-            }
-            else
-            {
-                Debug.LogError("Nenhum arquivo dispon�vel para download.");
-                yield break;
-            }
-        }
-
-        if (!string.IsNullOrEmpty(availableFileUrl))
-        {
-            yield return DownloadAndLoadModel(availableFileUrl);
-        }
-    }
-
-    // Baixa e carrega o modelo
-    IEnumerator DownloadAndLoadModel(string url)
-    {
-        byte[] modelData = null;
-        string fileName = Path.GetFileName(url);
-        string filePath = Path.Combine(Application.dataPath, fileName);
-
-        using (UnityWebRequest www = UnityWebRequest.Get(url))
-        {
-            yield return www.SendWebRequest();
-
-            if (www.result != UnityWebRequest.Result.Success)
-            {
-                Debug.LogError($"Erro ao baixar o arquivo: {www.error}");
-                yield break;
-            }
-
-            modelData = www.downloadHandler.data;
-        }
-
-        if (modelData == null || modelData.Length == 0)
-        {
-            Debug.LogError("Falha ao baixar o arquivo ou arquivo vazio.");
+            Debug.LogError("Erro ao obter o nome do arquivo: " + request.error);
             yield break;
         }
 
-        SaveModelToFile(filePath, modelData);
+        // Supondo que o nome do arquivo está retornado em um campo "filename" no JSON
+        string jsonResponse = request.downloadHandler.text;
+        SimpleJSON.JSONNode jsonResponseParsed = SimpleJSON.JSON.Parse(jsonResponse);
+        fileName = jsonResponseParsed["filename"];
+        Debug.Log("Nome do arquivo obtido: " + fileName);
 
-        if (!ImportModelAsset(fileName))
+        if (!string.IsNullOrEmpty(fileName))
         {
-            Debug.LogError("Falha ao importar o modelo.");
+            StartCoroutine(DownloadAndLoadModel(fileName));
+        }
+        else
+        {
+            Debug.LogError("Nome do arquivo não obtido corretamente.");
+        }
+    }
+
+    IEnumerator DownloadAndLoadModel(string modelFileName)
+    {
+        string url = baseUrl + modelFileName;  // Concatena a URL base com o nome do arquivo
+        UnityWebRequest www = UnityWebRequest.Get(url);
+        yield return www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError("Erro ao baixar o arquivo: " + www.error);
             yield break;
         }
 
-        yield return LoadSceneAndInstantiateModel(fileName);
-    }
+        string filePath = Path.Combine(Application.dataPath, modelFileName);
+        File.WriteAllBytes(filePath, www.downloadHandler.data);
+        Debug.Log("Arquivo salvo em: " + filePath);
 
-    // Salva o arquivo baixado localmente
-    void SaveModelToFile(string filePath, byte[] data)
-    {
-        try
-        {
-            File.WriteAllBytes(filePath, data);
-            Debug.Log($"Arquivo salvo em: {filePath}");
-        }
-        catch (IOException ex)
-        {
-            Debug.LogError($"Erro ao salvar o arquivo: {ex.Message}");
-        }
-    }
-
-    // Importa o modelo para o Unity
-    bool ImportModelAsset(string fileName)
-    {
-        string assetPath = "Assets/" + fileName;
-        try
-        {
-            AssetDatabase.ImportAsset(assetPath);
-            Debug.Log("Modelo importado.");
-            return true;
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogError($"Erro ao importar o modelo: {ex.Message}");
-            return false;
-        }
-    }
-
-    // Carrega a cena e instancia o modelo na cena
-    IEnumerator LoadSceneAndInstantiateModel(string fileName)
-    {
-        string assetPath = "Assets/" + fileName;
-
-        if (SceneManager.GetActiveScene().name != sceneName)
-        {
-            SceneManager.LoadScene(sceneName);
-            yield return new WaitForSeconds(0.5f);
-        }
-
-        GameObject model = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+        AssetDatabase.ImportAsset("Assets/" + modelFileName);
+        GameObject model = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/" + modelFileName);
 
         if (model != null)
         {
-            InstantiateModelInScene(model);
+            // Verifica se a cena AUTVIX está carregada
+            if (SceneManager.GetActiveScene().name != "Autvix")
+            {
+                SceneManager.LoadScene("AUTVIX");  // Carrega a cena AUTVIX se ela ainda não estiver ativa
+                yield return null;  // Espera até que a cena seja carregada
+            }
+
+            // Instancia o modelo na cena AUTVIX
+            Instantiate(model, Vector3.zero, Quaternion.identity);
+            Debug.Log("Modelo carregado e instanciado na cena AUTVIX.");
         }
         else
         {
             Debug.LogError("Falha ao carregar o modelo.");
-        }
-    }
-
-    // Instancia o modelo na cena
-    void InstantiateModelInScene(GameObject model)
-    {
-        try
-        {
-            Instantiate(model, modelPosition, Quaternion.identity);
-            Debug.Log("Modelo instanciado na cena.");
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogError($"Erro ao instanciar o modelo: {ex.Message}");
         }
     }
 }
